@@ -1,0 +1,226 @@
+﻿<Window x:Class="ScreenGuides.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ScreenGuides"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="980"
+        Background="Transparent"
+        AllowsTransparency="True" WindowStyle="None" MouseDown="Window_MouseDown">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#28FFFFFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#20FFFFFF"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#44FFFFFF"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#40FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#14FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ToggleButton">
+            <Setter Property="Background" Value="#28FFFFFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#20FFFFFF"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#44FFFFFF"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#40FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#14FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#CC0078D4"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#FF0078D4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Loaded="Grid_Loaded">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="2">
+            <Border Name="BackgroundLayer" Background="#7F333333" CornerRadius="6"/>
+            <Canvas Name="GuidesCanvas" ClipToBounds="True" SizeChanged="GuidesCanvas_SizeChanged"/>
+        </Grid>
+
+        <WrapPanel Name="WrapPanel" Margin="20,20,20,16" Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
+            <ToggleButton Name="FullScreenToggleButton"
+                ToolTip="Toggle fullscreen"
+                Margin="0,0,8,8"
+                Padding="10,6"
+                IsChecked="True"
+                Checked="FullScreenToggleButton_Checked"
+                Unchecked="FullScreenToggleButton_Unchecked">
+                <Image Source="Assets/Icons/full-screen-48.png" Width="20" Height="20"/>
+            </ToggleButton>
+            <StackPanel Margin="0,0,20,8" Orientation="Horizontal">
+                <Button Name="AddHorizontalGuideButton"
+                        ToolTip="Add horizontal guide"
+                        Margin="0,0,8,0"
+                        Padding="10,6"
+                        Click="AddHorizontalGuideButton_Click">
+                    <Image Source="Assets/Icons/horizontal-line-24.png" Width="20" Height="20"/>
+                </Button>
+                <Button Name="ChangeHorizontalColorButton"
+                        ToolTip="Change horizontal guide color"
+                        Padding="10,6"
+                        Click="ChangeHorizontalColorButton_Click">
+                    <Image Source="Assets/Icons/color-50.png" Width="20" Height="20"/>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Margin="0,0,8,8" Orientation="Horizontal">
+                <Button Name="AddVerticalGuideButton"
+                        ToolTip="Add vertical guide"
+                        Margin="0,0,8,0"
+                        Padding="10,6"
+                        Click="AddVerticalGuideButton_Click">
+                    <Image Source="Assets/Icons/horizontal-line-24.png" Width="20" Height="20" RenderTransformOrigin="0.5,0.5">
+                        <Image.RenderTransform>
+                            <RotateTransform Angle="90"/>
+                        </Image.RenderTransform>
+                    </Image>
+                </Button>
+                <Button Name="ChangeVerticalColorButton"
+                        ToolTip="Change vertical guide color"
+                        Padding="10,6"
+                        Click="ChangeVerticalColorButton_Click">
+                    <Image Source="Assets/Icons/color-50.png" Width="20" Height="20"/>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Margin="0,0,8,8" Orientation="Horizontal">
+                <Image Source="Assets/Icons/thickness-24.png" Width="20" Height="20" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <Slider x:Name="ThicknessSlider" Width="80" Minimum="0.5" Maximum="5" Value="1" Margin="0,0,8,0" VerticalAlignment="Center" ValueChanged="ThicknessSlider_ValueChanged"/>
+                <TextBlock x:Name="ThicknessValueLabel" Text="1" Width="20" VerticalAlignment="Center"/>
+            </StackPanel>
+        </WrapPanel>
+
+        <StackPanel Grid.Column="2" Grid.Row="1" Margin="0, 0, 20, 50">
+            
+            <WrapPanel Name="ControlsStackPanel" Orientation="Vertical">
+                <Button x:Name="ExitButton"
+                        ToolTip="Exit app"
+                        Margin="0,0,0,8"
+                        Padding="10,6"
+                        Click="ExitButton_Click">
+                    <Image Source="Assets/Icons/exit-64.png" Width="20" Height="20"/>
+                </Button>
+                <ToggleButton x:Name="ToggleTopmostButton"
+                              IsChecked="True"
+                              Margin="0,0,0,8"
+                              Padding="10,6"
+                              ToolTip="Toggle stay on top"
+                              Checked="ToggleTopmostButton_Checked"
+                              Unchecked="ToggleTopmostButton_Unchecked">
+                    <Image Source="Assets/Icons/stay-top-64.png" Width="20" Height="20"/>
+                </ToggleButton>
+
+                <ToggleButton x:Name="ToggleGuidesButton"
+                              IsChecked="False"
+                              Margin="0,0,0,8"
+                              Padding="10,6"
+                              ToolTip="Toggle guides visibility"
+                              Checked="ToggleGuidesButton_Checked"
+                              Unchecked="ToggleGuidesButton_Unchecked">
+                    <Image Width="20" Height="20">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="Assets/Icons/gudes-show-24.png"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=ToggleGuidesButton}" Value="True">
+                                        <Setter Property="Source" Value="Assets/Icons/guide-none-30.png"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </ToggleButton>
+
+                <Button x:Name="ClearGuidesButton"
+                        ToolTip="Clear all guides"
+                        Margin="0,0,0,8"
+                        Padding="10,6"
+                        Click="ClearGuidesButton_Click">
+                    <Image Source="Assets/Icons/clear-48.png" Width="20" Height="20"/>
+                </Button>
+            </WrapPanel>
+
+            <ToggleButton x:Name="ToggleBackgroundButton"
+                              IsChecked="True"
+                              Margin="0,0,0,8"
+                              Padding="10,6"
+                              ToolTip="Toggle background visibility"
+                              Checked="ToggleBackgroundButton_Checked"
+                              Unchecked="ToggleBackgroundButton_Unchecked">
+                <Image Width="20" Height="20">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Source" Value="Assets/Icons/hide-30.png"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=ToggleBackgroundButton}" Value="False">
+                                    <Setter Property="Source" Value="Assets/Icons/show-30.png"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </ToggleButton>
+
+            
+        </StackPanel>
+
+        
+    </Grid>
+</Window>
