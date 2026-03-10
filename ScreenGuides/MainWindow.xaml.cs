@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -14,15 +15,12 @@ using System.Windows.Shapes;
 
 namespace ScreenGuides
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private const double GuideStartOffset = 20;
         private const double GuideSpacing = 30;
         private const double TransparentOverlayOpacity = 0.35;
-        private const double HitTestAreaSize = 15; // pixels extending from the line in each direction
+        private const double HitTestAreaSize = 15; // extra area so easy to drag and iteract
 
         private static readonly string SaveFilePath = System.IO.Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -34,13 +32,13 @@ namespace ScreenGuides
         private int _horizontalGuideCount;
         private int _verticalGuideCount;
         private bool _isBackgroundHidden;
-        private Line _draggedGuide;
+        private Line? _draggedGuide;
         private Point _dragStartPoint;
         private Color _horizontalGuideColor = Colors.Red;
         private Color _verticalGuideColor = Colors.DodgerBlue;
         private double _guideThickness = 1;
-        private ContextMenu _guideContextMenu;
-        private Line _hoveredGuide;
+        private ContextMenu? _guideContextMenu;
+        private Line? _hoveredGuide;
         private Dictionary<Line, Rectangle> _lineHitTestMap = new();
 
         public MainWindow()
@@ -80,7 +78,7 @@ namespace ScreenGuides
                 IsHitTestVisible = !_isBackgroundHidden
             };
 
-            // Create invisible hit-test rectangle
+            // dis rect for the extra area so can easyly interact
             var hitTestRect = new Rectangle
             {
                 Width = GuidesCanvas.ActualWidth,
@@ -329,7 +327,7 @@ namespace ScreenGuides
             if (_draggedGuide != null && _draggedGuide.IsMouseCaptured)
             {
                 Point currentPoint = e.GetPosition(GuidesCanvas);
-                string orientation = _draggedGuide.Tag as string;
+                string? orientation = _draggedGuide.Tag as string;
 
                 if (orientation == "H")
                 {
@@ -448,7 +446,7 @@ namespace ScreenGuides
 
         private void ChangeGuideColor(Line line)
         {
-            SolidColorBrush brush = line.Stroke as SolidColorBrush;
+            SolidColorBrush? brush = line.Stroke as SolidColorBrush;
             Color currentColor = brush?.Color ?? Colors.Black;
             
             Color selectedColor = ShowColorPicker(currentColor);
@@ -584,7 +582,10 @@ namespace ScreenGuides
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(SaveFilePath)!);
                 File.WriteAllText(SaveFilePath, json);
             }
-            catch { }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Failed to save guides: {e.Message}");
+            }
         }
 
         private void LoadGuides()
@@ -614,7 +615,10 @@ namespace ScreenGuides
                         AddVerticalGuideAt(guide.Position, color, guide.Thickness);
                 }
             }
-            catch { }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Failed to load guides: {e.Message}");
+            }
         }
     }
 }
